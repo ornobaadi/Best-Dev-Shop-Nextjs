@@ -160,12 +160,37 @@ const agencies = [
     teamSize: '50-100',
     rate: '$200/hr',
   },
+  {
+    name: 'Vrrb',
+    location: 'New York City, US',
+    teamSize: '50-100',
+    rate: '$200/hr',
+  },
+  {
+    name: 'Ignite Visibility',
+    location: 'New York City, US',
+    teamSize: '50-100',
+    rate: '$200/hr',
+  },
+  {
+    name: 'Trango Tech',
+    location: 'New York City, US',
+    teamSize: '50-100',
+    rate: '$200/hr',
+  },
+  {
+    name: 'Eseo Space',
+    location: 'New York City, US',
+    teamSize: '50-100',
+    rate: '$200/hr',
+  },
   // Add more agencies as needed...
 ]
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('')
   const [location, setLocation] = useState('')
+  const [filteredAgencies, setFilteredAgencies] = useState(agencies) // New state to hold filtered agencies
   const router = useRouter()
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
@@ -174,15 +199,17 @@ export default function Home() {
     const formattedSearchQuery = searchQuery.toLowerCase().replace(/\s+/g, '-')
     const formattedLocation = location.toLowerCase().replace(/\s+/g, '-')
 
-    const foundAgency = agencies.find(agency =>
-      agency.name.toLowerCase().replace(/\s+/g, '-').includes(formattedSearchQuery) &&
+    // Use filter to get all matching agencies
+    const matchingAgencies = agencies.filter(agency =>
+      agency.name.toLowerCase().replace(/\s+/g, '-').startsWith(formattedSearchQuery) &&
       agency.location.toLowerCase().includes(formattedLocation)
     )
 
-    if (foundAgency) {
-      router.push(`/${foundAgency.name.toLowerCase().replace(/\s+/g, '-')}`)
+    // Update the filteredAgencies state with the results
+    if (matchingAgencies.length > 0) {
+      setFilteredAgencies(matchingAgencies)
     } else {
-      alert('Agency not found')
+      alert('No agencies found')
     }
   }
 
@@ -197,7 +224,8 @@ export default function Home() {
           location={location}
           setLocation={setLocation}
         />
-        <FeaturedAgenciesSection agencies={agencies} />
+        {/* Display filtered agencies */}
+        <FeaturedAgenciesSection agencies={filteredAgencies} />
       </main>
     </div>
   )

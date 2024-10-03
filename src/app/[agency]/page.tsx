@@ -72,6 +72,30 @@ const agencies = [
     teamSize: '50-100',
     rate: '$200/hr',
   },
+    {
+    name: 'Vrrb',
+    location: 'New York City, US',
+    teamSize: '50-100',
+    rate: '$200/hr',
+  },
+  {
+    name: 'Ignite Visibility',
+    location: 'New York City, US',
+    teamSize: '50-100',
+    rate: '$200/hr',
+  },
+  {
+    name: 'Trango Tech',
+    location: 'New York City, US',
+    teamSize: '50-100',
+    rate: '$200/hr',
+  },
+  {
+    name: 'Eseo Space',
+    location: 'New York City, US',
+    teamSize: '50-100',
+    rate: '$200/hr',
+  },
   // Add more agencies as needed...
 ]
 
