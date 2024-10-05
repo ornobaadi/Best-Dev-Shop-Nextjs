@@ -1,20 +1,17 @@
+// src/app/components/Header.tsx
+
+
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Header() {
     return (
         <header className="bg-black text-white p-4">
-            <div className="container mx-auto flex justify-between items-center">
-                <Link href="/" className="text-2xl font-bold">DevShop</Link>
+            <div className="container mx-auto flex justify-center items-center">
                 <nav>
-                    <ul className="flex space-x-4">
-                        <li><Link href="#" className="hover:text-gray-300">Development</Link></li>
-                        <li><Link href="#" className="hover:text-gray-300">IT Services</Link></li>
-                        <li><Link href="#" className="hover:text-gray-300">Marketing</Link></li>
-                        <li><Link href="#" className="hover:text-gray-300">Design</Link></li>
-                        <li><Link href="#" className="hover:text-gray-300">Business Services</Link></li>
-                    </ul>
+                    <p>List your business to get top level clients and  level up your agency</p>
                 </nav>
             </div>
         </header>

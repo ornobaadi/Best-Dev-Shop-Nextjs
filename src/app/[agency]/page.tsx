@@ -1,124 +1,76 @@
-// 'use client'
+// src/app/[agency]/page.tsx
 
-// import { useParams } from 'next/navigation'
-// import Image from 'next/image'
+'use client'
 
-// const agencies = [
-//   {
-//     name: 'Digital Silk',
-//     location: 'New York City, US',
-//     teamSize: '50-100',
-//     rate: '$150/hr',
-//     description: 'Digital Silk specializes in growing brands online through innovative strategies and sleek designs.',
-//     image: '/images/digital-silk.png',
-//     website: 'https://digitalsilk.com',
-//     portfolio: '#',
-//   },
-//   // Add more agencies here
-// ]
+import Image from 'next/image'
+import { useEffect, useState } from 'react';
 
-// export default function AgencyPage() {
-//   const { agency } = useParams()
+interface Agency {
+    name: string;
+    location: string;
+    teamSize: string;
+    rate: string;
+}
 
-//   // Find the agency by its formatted name
-//   const selectedAgency = agencies.find(item =>
-//     item.name.toLowerCase().replace(/\s+/g, '-') === agency
-//   )
+interface AgencyPageProps {
+    params: { agency: string };
+}
 
-//   if (!selectedAgency) {
-//     return <p>Agency not found</p>
-//   }
+export default function AgencyPage({ params }: AgencyPageProps) {
+    const { agency } = params; // Get the dynamic route parameter
+    const [agencyData, setAgencyData] = useState<Agency | null>(null); // State to hold agency data
+    const [loading, setLoading] = useState(true); // Loading state
 
-//   return (
-//     <div className="container mx-auto py-12">
-//       <h1 className="text-3xl font-bold mb-8">{selectedAgency.name}</h1>
+    useEffect(() => {
+        if (agency) {
+            // Simulate fetching agency data based on the agency name
+            // In a real app, you'd fetch from an API or your data source
+            const agencyDetails = {
+                name: agency, // Use the agency parameter directly
+                location: 'New York City, US',
+                teamSize: '50-100',
+                rate: '$200/hr'
+            };
 
-//       {/* Agency details */}
-//       <div className="bg-white shadow-lg p-6 rounded-lg">
-//         <div className="flex items-center space-x-4">
-//           <Image src={selectedAgency.image} alt={selectedAgency.name} width={200} height={200} className="rounded-lg" />
-//           <div>
-//             <h2 className="text-2xl font-bold mb-2">{selectedAgency.name}</h2>
-//             <p className="text-gray-600">{selectedAgency.description}</p>
-//             <p className="text-sm mt-2">📍 {selectedAgency.location}</p>
-//             <p className="text-sm">👥 Team Size: {selectedAgency.teamSize}</p>
-//             <p className="text-sm">💵 {selectedAgency.rate}</p>
-//           </div>
-//         </div>
+            setAgencyData(agencyDetails);
+            setLoading(false);
+        }
+    }, [agency]);
 
-//         {/* Call to Action buttons */}
-//         <div className="flex space-x-4 mt-6">
-//           <a href={selectedAgency.website} target="_blank" className="bg-black text-white px-4 py-2 rounded-md">Visit Website</a>
-//           <a href={selectedAgency.portfolio} target="_blank" className="bg-gray-200 text-black px-4 py-2 rounded-md">View Portfolio</a>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
+    if (loading) {
+        return <div>Loading...</div>; // Loading state
+    }
 
+    if (!agencyData) {
+        return <div>Agency not found.</div>; // Handle case where agency data is not found
+    }
 
-import { notFound } from 'next/navigation'
+    // Construct the image path for the agency logo
+    const imagePath = `/images/${agencyData.name.toLowerCase().replace(/\s+/g, '-')}.png`;
 
-const agencies = [
-  {
-    name: 'Digital Silk',
-    location: 'New York City, US',
-    teamSize: '50-100',
-    rate: '$150/hr',
-  },
-  {
-    name: 'Think to Share',
-    location: 'San Francisco, US',
-    teamSize: '50-100',
-    rate: '$200/hr',
-  },
-    {
-    name: 'Vrrb',
-    location: 'New York City, US',
-    teamSize: '50-100',
-    rate: '$200/hr',
-  },
-  {
-    name: 'Ignite Visibility',
-    location: 'New York City, US',
-    teamSize: '50-100',
-    rate: '$200/hr',
-  },
-  {
-    name: 'Trango Tech',
-    location: 'New York City, US',
-    teamSize: '50-100',
-    rate: '$200/hr',
-  },
-  {
-    name: 'Eseo Space',
-    location: 'New York City, US',
-    teamSize: '50-100',
-    rate: '$200/hr',
-  },
-  // Add more agencies as needed...
-]
-
-export default function AgencyPage({ params }: { params: { agency: string } }) {
-  const agencyName = params.agency.replace(/-/g, ' ')
-
-  const agency = agencies.find(a => a.name.toLowerCase() === agencyName.toLowerCase())
-
-  if (!agency) {
-    return notFound()
-  }
-
-  return (
-    <div className="min-h-screen bg-white">
-      <header className="bg-black text-white p-4">
-        <h1 className="text-2xl">{agency.name}</h1>
-      </header>
-      <main className="container mx-auto py-16">
-        <h2 className="text-4xl font-bold mb-8">{agency.name}</h2>
-        <p className="text-xl">Location: {agency.location}</p>
-        <p className="text-xl">Team Size: {agency.teamSize}</p>
-        <p className="text-xl">Rate: {agency.rate}</p>
-      </main>
-    </div>
-  )
+    return (
+        <div className="container mx-auto p-4">
+            <h1 className="text-4xl font-bold mb-4">{agencyData.name}</h1>
+            <Image
+                src={imagePath}
+                alt={`${agencyData.name} logo`}
+                width={300}
+                height={150}
+                onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/images/default-image.png'; // Fallback image
+                }}
+                className="mb-4"
+            />
+            <div className="mb-2">
+                <strong>Location:</strong> {agencyData.location}
+            </div>
+            <div className="mb-2">
+                <strong>Team Size:</strong> {agencyData.teamSize}
+            </div>
+            <div className="mb-2">
+                <strong>Rate:</strong> {agencyData.rate}
+            </div>
+            <button className="mt-4 bg-black text-white px-4 py-2 rounded">Visit Website</button>
+        </div>
+    );
 }

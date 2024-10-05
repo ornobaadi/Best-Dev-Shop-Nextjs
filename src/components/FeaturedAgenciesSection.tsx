@@ -1,3 +1,5 @@
+// src/app/components/FeaturedAgenciesSection.tsx
+
 'use client'
 
 import Link from 'next/link'
@@ -33,11 +35,11 @@ export default function FeaturedAgenciesSection({ agencies }: FeaturedAgenciesSe
                                     <Image
                                         src={imagePath}
                                         alt={`${agency.name} logo`}
-                                        width={100}
-                                        height={50}
+                                        width={300}
+                                        height={150}
                                         className="mb-4"
                                         onError={(e) => {
-                                            (e.target as HTMLImageElement).src = '/images/fallback-logo.png'; // Set your fallback image path
+                                            (e.target as HTMLImageElement).src = '/images/digital-silk.png'; // Set your fallback image path
                                         }}
                                     />
                                     <h3 className="text-xl font-semibold mb-2">{agency.name}</h3>
