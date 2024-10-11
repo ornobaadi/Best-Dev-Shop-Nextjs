@@ -1,76 +1,130 @@
 // src/app/[agency]/page.tsx
 
-'use client'
+'use client';
 
-import Image from 'next/image'
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation'; // Ensure correct import
+import FilterSection from '../../components/FilterSection'; // Import FilterSection component
+import { Star } from 'lucide-react';
 
 interface Agency {
-    name: string;
-    location: string;
-    teamSize: string;
-    rate: string;
+  name: string;
+  location: string;
+  teamSize: string;
+  rate: string;
+  description: string;
 }
 
-interface AgencyPageProps {
-    params: { agency: string };
-}
+const agencies = [
+  {
+    name: 'Digital Silk',
+    location: 'New York City, US',
+    teamSize: '50-100',
+    rate: '$150/hr',
+    description: 'We build top-quality digital solutions for brands.',
+  },
+  {
+    name: 'Think to Share',
+    location: 'San Francisco, US',
+    teamSize: '50-100',
+    rate: '$200/hr',
+    description: 'Leading software development company in the Bay Area.',
+  },
+  {
+    name: 'Ignite Visibility',
+    location: 'New York City, US',
+    teamSize: '50-100',
+    rate: '$200/hr',
+    description: 'Experts in marketing and brand visibility.',
+  },
+  {
+    name: 'Trango Tech',
+    location: 'New York City, US',
+    teamSize: '50-100',
+    rate: '$200/hr',
+    description: 'Top technology and consulting services.',
+  },
+  {
+    name: 'Eseo Space',
+    location: 'New York City, US',
+    teamSize: '50-100',
+    rate: '$200/hr',
+    description: 'Space technology and software solutions.',
+  },
+];
 
-export default function AgencyPage({ params }: AgencyPageProps) {
-    const { agency } = params; // Get the dynamic route parameter
-    const [agencyData, setAgencyData] = useState<Agency | null>(null); // State to hold agency data
-    const [loading, setLoading] = useState(true); // Loading state
+export default function AgencyPage() {
+  const router = useRouter();
+  const [agency, setAgency] = useState<Agency | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
-    useEffect(() => {
-        if (agency) {
-            // Simulate fetching agency data based on the agency name
-            // In a real app, you'd fetch from an API or your data source
-            const agencyDetails = {
-                name: agency, // Use the agency parameter directly
-                location: 'New York City, US',
-                teamSize: '50-100',
-                rate: '$200/hr'
-            };
+  // Ensure the component is mounted before using router
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
-            setAgencyData(agencyDetails);
-            setLoading(false);
+  useEffect(() => {
+    if (isMounted && router) {
+      const agencyName = window.location.pathname.split('/').pop();
+
+      if (agencyName) {
+        const foundAgency = agencies.find(
+          (agency) => agency.name.toLowerCase().replace(/\s+/g, '-') === agencyName
+        );
+        if (foundAgency) {
+          setAgency(foundAgency);
         }
-    }, [agency]);
-
-    if (loading) {
-        return <div>Loading...</div>; // Loading state
+      }
     }
+  }, [isMounted, router]);
 
-    if (!agencyData) {
-        return <div>Agency not found.</div>; // Handle case where agency data is not found
-    }
+  // Show loading state if agency is not loaded yet
+  if (!agency) {
+    return <p>Loading...</p>;
+  }
 
-    // Construct the image path for the agency logo
-    const imagePath = `/images/${agencyData.name.toLowerCase().replace(/\s+/g, '-')}.png`;
+  // Construct image path based on agency name
+  const imagePath = `/images/${agency.name.toLowerCase().replace(/\s+/g, '-')}.png`;
 
-    return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-4xl font-bold mb-4">{agencyData.name}</h1>
-            <Image
-                src={imagePath}
-                alt={`${agencyData.name} logo`}
-                width={300}
-                height={150}
-                onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/images/default-image.png'; // Fallback image
-                }}
-                className="mb-4"
-            />
-            <div className="mb-2">
-                <strong>Location:</strong> {agencyData.location}
-            </div>
-            <div className="mb-2">
-                <strong>Team Size:</strong> {agencyData.teamSize}
-            </div>
-            <div className="mb-2">
-                <strong>Rate:</strong> {agencyData.rate}
-            </div>
-            <button className="mt-4 bg-black text-white px-4 py-2 rounded">Visit Website</button>
+  return (
+    <div className="container mx-auto py-12">
+      <div className="flex flex-col lg:flex-row">
+        {/* Render FilterSection */}
+        <div className="w-full lg:w-1/4 mb-8 lg:mb-0">
+        <FilterSection />
         </div>
-    );
+
+        {/* Agency details section */}
+        <div className="w-full lg:w-3/4">
+          <h1 className="text-3xl font-bold">{agency.name}</h1>
+          <div className='p-4 mt-5 rounded-lg shadow-2xl'>
+          <img
+            src={imagePath}
+            alt={`${agency.name} logo`}
+            className="mb-4 w-auto h-auto object-contain "
+            onError={(e) => {
+              // Handle fallback if image doesn't exist
+              e.currentTarget.src = '/images/default-image.png'; // Fallback image
+            }}
+          />
+          <p>{agency.description}</p>
+          <div className="flex items-center mb-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} className="w-4 h-4 text-yellow-400" />
+                    ))}
+                  </div>
+          <p className="mt-4">
+            <strong>Location:</strong> {agency.location}
+          </p>
+          <p>
+            <strong>Hourly Rate:</strong> {agency.rate}
+          </p>
+          <p>
+            <strong>Team Size:</strong> {agency.teamSize}
+          </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
